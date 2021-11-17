@@ -5,9 +5,8 @@
 
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800 ">Audit Report</h1>
+    <h1 class="h3 mb-0 text-gray-800 ">Event Audit</h1>
 </div>
-
 @if(Session::has('berhasil'))
     <div class="alert alert-success">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -19,14 +18,14 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
 <div class="card-header py-3">
-    <h6 class="m-0 font-weight-bold text-primary">Data Audit Report</h6>
+    <h6 class="m-0 font-weight-bold text-primary">Data Event Audit</h6>
 </div>
 <div class="card-body">
         <a href="#" class="btn mb-3 btn-success btn-icon-split btn-sm" data-toggle="modal" data-target="#insertModal">
         <span class="icon text-white-50">
             <i class="fas fa-plus"></i>
         </span>
-        <span class="text">Tambah Data Laporan Audit</span>
+        <span class="text">Tambah Data Event Audit</span>
     </a>
     <div class="table-responsive">
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -34,18 +33,22 @@
                 <tr class="text-center">
                     <th>No.</th>
                     <th style="display:none">No Audit</th>
-                    <th>No Laporan Audit</th>
-                    <th>Judul Laporan</th>
+                    <th>No Audit</th>
+                    <th>Judul</th>
+                    <th>Status</th>
+                    <th>Percentage</th>
                     <th>Tipe Audit</th>
                     <th>Jenis Audit</th>
                     <th>Objek</th>
-                    <th>Auditor</th>
                     <th>Department</th>
-                    <th>Kriteria Audit</th>
-                    <th>Tahun Audit</th>
-                    <th>Tanggal Mulai</th>
-                    <th>Tanggal Akhir</th>
-                    <th>Jumlah Temuan</th>
+                    <th>Auditor</th>
+                    <th>Kriteria</th>
+                    <th>Tahun</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Finding</th>
+                    <th>Root Cause</th>
+                    <th>Corrective Action</th>
                     <th>Dokumen Audit</th>
                     <th>Edit</th>
                     <th>Delete</th>
@@ -61,16 +64,20 @@
                     <td style="display:none">{{ $list_audit -> no_audit }}</td>
                     <td>{{ $list_audit -> no_laporan_audit }}</td>
                     <td>{{ $list_audit -> judul_audit }}</td>
+                    <td>{{ $list_audit -> status_audit }}</td>
+                    <td>{{ $list_audit -> percentage_audit }}</td>
                     <td>{{ $list_audit -> tipe_audit }}</td>
                     <td>{{ $list_audit -> jenis_audit }} </td>
                     <td>{{ $list_audit -> objek}}</td>
-                    <td>{{ $list_audit -> auditor }}</td>
                     <td>{{ $list_audit -> nama_department}}  </td>
+                    <td>{{ $list_audit -> auditor }}</td>
                     <td>{{ $list_audit -> kriteria_audit }}</td>
                     <td>{{ $list_audit -> tahun_audit }}</td>
                     <td>{{ $list_audit -> tanggal_mulai_audit }}</td>
                     <td>{{ $list_audit -> tanggal_akhir_audit  }}</td>
-                    <td></td>
+                    <td>{{ $list_audit -> jumlah_temuan  }}</td>
+                    <td>{{ $list_audit -> root_audit  }}</td>
+                    <td>{{ $list_audit -> corrective_action  }}</td>
                     <td>
                     <a target="_blank" href="{{url('storage/LaporanAudit', $list_audit -> file)}}">{{ $list_audit -> file }}</a>
                     </td>
@@ -129,7 +136,7 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-12">
-                        <input id="judul_audit" type="text" class="form-control form-control-user " name="judul_audit" value="{{ old('judul_audit') }}" required autocomplete="judul_audit" placeholder="Judul Laporan">
+                        <input id="judul_audit" type="text" class="form-control form-control-user " name="judul_audit" value="{{ old('judul_audit') }}" required autocomplete="judul_audit" placeholder="Judul">
                         @error('judul_audit')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -139,8 +146,22 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-6">
+                        <select name="status_audit"  class=" form-control form-control-user @error('status_audit') is-invalid @enderror" id="status_audit" required>
+                            <option value=""selected disabled >Pilih Status Audit</option>                 
+                            <option value="On Progress">On Progress</option>
+                            <option value="Completed">Completed</option>                 
+                        </select>
+                        @error('status_audit')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-6">
                         <select name="tipe_audit"  class=" form-control form-control-user @error('tipe_audit') is-invalid @enderror" id="tipe_audit" required>
-                            <option value=""selected >Pilih Tipe Audit</option>                 
+                            <option value=""selected disabled >Pilih Tipe Audit</option>                 
                             <option value="Internal">Internal</option>
                             <option value="External">External</option>                 
                         </select>
@@ -170,7 +191,7 @@
                     </div>
                     <div class="col-sm-6">
                     <select name="department"  class="form-control  @error('department') is-invalid @enderror" id="department" required>
-                        <option value=""selected >Department</option>
+                        <option value=""selected disabled>Department</option>
                             @foreach ($department as $list_depart)
                             <option value="{{$list_depart->id}}">{{ $list_depart->nama_department}}</option>
                             @endforeach
@@ -237,4 +258,3 @@
     </div>
 </div>
 @endsection
-
