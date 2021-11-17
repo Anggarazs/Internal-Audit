@@ -8,6 +8,14 @@
     <h1 class="h3 mb-0 text-gray-800 ">Corrective Action Monitoring</h1>
 </div>
 
+@if(Session::has('berhasil'))
+    <div class="alert alert-success">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Success,</strong>
+        {{ Session::get('berhasil') }}
+    </div>
+@endif
+
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
 <div class="card-header py-3">
@@ -30,6 +38,7 @@
             <th>Status</th>
             <th>Progress</th>
             <th>Tipe Audit</th>
+            <th>Jenis Audit</th>
             <th>Risk Level</th>
             <th>Kriteria Audit</th>
             <th>Tahun Audit</th>
@@ -57,9 +66,10 @@
             <td>{{ $item -> judul_audit}}</td>
             <td>{{ $item -> status }}</td>
             <td>{{ $item -> progress }}</td>
-            <td>{{ $item -> tipe_audit }}t</td>
+            <td>{{ $item -> tipe_audit }}</td>
+            <td>{{ $item -> jenis_audit }}</td>
             <td>{{ $item -> risk_level }}</td>
-            <td>{{ $item -> kriteria_audit }}t</td>
+            <td>{{ $item -> kriteria_audit}}</td>
             <td>{{ $item -> tahun_audit }}</td>
             <td>{{ $item -> tanggal_mulai_audit }}</td>
             <td>{{ $item -> tanggal_akhir_audit }}</td>
@@ -98,6 +108,7 @@
     </div>
 </div>
 </div>
+
 <!-- Modal -->
 <div class="modal fade" id="insertModal" tabindex="-1" role="dialog" aria-labelledby="insertModal" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -109,12 +120,12 @@
             </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="/insert_audit" enctype="multipart/form-data">
+                <form method="POST" action="/insert_finding" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group row">
                     <div class="col-sm-6">
-                    <select name="no_laporan_audit"  class="form-control  @error('no_laporan_audit') is-invalid @enderror" id="no_laporan_audit" required>
-                        <option value=""selected >Nomor Laporan Audit</option>
+                    <select name="no_laporan_audit" class="form-control  @error('no_laporan_audit') is-invalid @enderror" id="no_laporan_audit" onchange="laporan_audit()" required>
+                        <option value=""selected disabled >Nomor Laporan Audit</option>
                             @foreach ($Audit as $item)
                             <option value="{{$item->no_audit}}">{{ $item->no_laporan_audit}}</option>
                             @endforeach
@@ -126,7 +137,7 @@
                         @enderror
                     </div>
                     <div class="col-sm-6">
-                     <input id="auditor" type="text" class="form-control form-control-user" name="auditor" required autocomplete="auditor" placeholder="Auditor">
+                        <input id="auditor" type="text" class="form-control form-control-user " name="auditor" value="{{ old('auditor') }}" required autocomplete="auditor" placeholder="Auditor" readonly>
                       @error('auditor')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -136,7 +147,7 @@
                 </div>
                 <div class="form-group row">
                 <div class="col-sm-12">
-                        <input id="judul_audit" type="text" class="form-control form-control-user " name="judul_audit" value="{{ old('judul_audit') }}" required autocomplete="judul_audit" placeholder="Judul Laporan Audit">
+                        <input id="judul_audit" type="text" class="form-control form-control-user " name="judul_audit" value="{{ old('judul_audit') }}" required autocomplete="judul_audit" placeholder="Judul Laporan Audit" readonly>
                          @error('judul_audit')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -154,7 +165,12 @@
                         @enderror
                     </div>
                     <div class="col-sm-6">
-                    <input id="risk_level" type="text" class="form-control form-control-user " name="risk_level" value="{{ old('risk_level') }}" required autocomplete="risk_level" placeholder="Risk Level">
+                        <select name="risk_level"  class=" form-control form-control-user @error('risk_level') is-invalid @enderror" id="risk_level" required>
+                            <option value=""selected disabled >Pilih Risk Level</option>                 
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>  
+                            <option value="High">High</option>               
+                        </select>
                         @error('risk_level')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -164,7 +180,7 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-6">
-                    <input id="tipe_audit" type="text" class="form-control form-control-user " name="tipe_audit" value="{{ old('tipe_audit') }}" required autocomplete="tipe_audit" placeholder="Tipe Audit">
+                    <input id="tipe_audit" type="text" class="form-control form-control-user " name="tipe_audit" value="{{ old('tipe_audit') }}" required autocomplete="tipe_audit" placeholder="Tipe Audit" readonly>
                          @error('tipe_audit')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -172,23 +188,27 @@
                          @enderror
                     </div>
                     <div class="col-sm-6">
-                        <input id="krtieria_audit" type="text" class="form-control form-control-user"  name="krtieria_audit" value="{{ old('krtieria_audit') }}" required autocomplete="krtieria_audit" placeholder="Kriteria Audit">
-                        @error('krtieria_audit')
+                        <input id="kriteria_audit" type="text" class="form-control form-control-user " name="kriteria_audit" value="{{ old('kriteria_audit') }}" required autocomplete="kriteria_audit" placeholder="Kriteria Audit" readonly>
+                         @error('kriteria_audit')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
-                        @enderror
+                         @enderror
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <input id="jenis_audit" type="text" class="form-control form-control-user " name="jenis_audit" value="{{ old('jenis_audit') }}" required autocomplete="jenis_audit" placeholder="Jenis Audit" readonly>
+                         @error('jenis_audit')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                         @enderror
                     </div>
                 </div>    
                 <div class="form-group row">
                 <div class="col-sm-4">
-                        <select name="tahun_audit"  class=" form-control form-control-user @error('tahun_audit') is-invalid @enderror" id="tahun_audit" value="{{ old('tahun_audit') }}" required>
-                            <option value=""selected >Tahun Audit</option>                 
-                            <option value="2019">2019</option>
-                            <option value="2020">2020</option>      
-                            <option value="2021">2021</option>
-                            <option value="2022">2022</option>              
-                        </select>
+                    <input id="tahun_audit" type="text" class="form-control form-control-user"  name="tahun_audit" value="{{ old('tahun_audit') }}" required autocomplete="tahun_audit" placeholder="Tahun Audit" readonly>
                         @error('tahun_audit')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -196,7 +216,7 @@
                         @enderror
                     </div>
                     <div class="col-sm-4">
-                     <input id="tanggal_mulai_audit" type="text" class="form-control form-control-user" onfocus="(this.type='date')" onblur="(this.type='text')" name="tanggal_mulai_audit" required autocomplete="tanggal_mulai_audit" placeholder="Tanggal Mulai">
+                     <input id="tanggal_mulai_audit" type="text" class="form-control form-control-user" name="tanggal_mulai_audit" required autocomplete="tanggal_mulai_audit" placeholder="Tanggal Mulai" readonly>
                       @error('tanggal_mulai_audit')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -204,7 +224,7 @@
                         @enderror
                     </div>
                     <div class="col-sm-4">
-                     <input id="tanggal_akhir_audit" type="text" class="form-control form-control-user" onfocus="(this.type='date')" onblur="(this.type='text')" name="tanggal_akhir_audit" required autocomplete="tanggal_akhir_audit" placeholder="Tanggal Akhir">
+                     <input id="tanggal_akhir_audit" type="text" class="form-control form-control-user" name="tanggal_akhir_audit" required autocomplete="tanggal_akhir_audit" placeholder="Tanggal Akhir" readonly>
                       @error('tanggal_akhir_audit')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -224,7 +244,12 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-6">
-                     <input id="department" type="text" class="form-control form-control-user" name="department" required autocomplete="department" placeholder="Department">
+                        <select name="department"  class="form-control  @error('department') is-invalid @enderror" id="department" required>
+                            <option value=""selected disabled>Department</option>
+                                @foreach ($Depart as $list_depart)
+                                    <option value="{{$list_depart->id}}">{{ $list_depart->nama_department}}</option>
+                                @endforeach
+                        </select>
                       @error('department')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -232,7 +257,7 @@
                         @enderror
                     </div>
                     <div class="col-sm-6">
-                     <input id="auditee" type="text" class="form-control form-control-user" onfocus="(this.type='date')" onblur="(this.type='text')" name="auditee" required autocomplete="auditee" placeholder="Auditee">
+                     <input id="auditee" type="text" class="form-control form-control-user" name="auditee" required autocomplete="auditee" placeholder="Auditee">
                       @error('auditee')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -268,9 +293,6 @@
                         @enderror
                     </div>
                 </div>
-                <div class="form-group row">
-                    <input class="form-control form-control-user" type="file" name="file" accept=".pdf,.jpg,.jpeg,.png"/>
-                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-success">Tambah Data</button>
@@ -280,4 +302,28 @@
         </div>
     </div>
 </div>
+<script>
+    function laporan_audit() {
+     let nomor = $('#no_laporan_audit').val();
+     $.ajax ({
+        url : '/data_tampil',
+        type : 'get',
+        data : {
+            no_audit : nomor
+        },
+        success : function (response) {
+            // console.log(response.data.auditor);
+            let isian = response.data; 
+            $('#auditor').val(isian.auditor);
+            $('#judul_audit').val(isian.judul_audit);
+            $('#tipe_audit').val(isian.tipe_audit);
+            $('#kriteria_audit').val(isian.kriteria_audit);
+            $('#jenis_audit').val(isian.jenis_audit);
+            $('#tahun_audit').val(isian.tahun_audit);
+            $('#tanggal_mulai_audit').val(isian.tanggal_mulai_audit);
+            $('#tanggal_akhir_audit').val(isian.tanggal_akhir_audit);
+        }
+     });
+    }
+</script>
 @endsection
