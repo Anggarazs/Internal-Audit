@@ -27,7 +27,6 @@
             @csrf
             <div class="form-group row">
             <input type="hidden" name="no_audit" value="{{$audit->no_audit}}">
-           
                 <div class="col-lg-6">
                 <label>Nomor Laporan Audit</label>
                     <input  type="text" class="form-control " name="no_laporan_audit" required autocomplete="no_laporan_audit" autofocus placeholder="Nomor Laporan Audit" value="{{$audit->no_laporan_audit}}">
@@ -49,8 +48,32 @@
             </div>
             <div class="form-group row">
                 <div class="col-lg-6">
+                <label>Status Audit</label>
+                    <select name="status_audit"  class=" form-control form-control-user @error('status_audit') is-invalid @enderror" id="status_audit" value="{{$audit->status_audit}} required>
+                            <option value="" selected  >Pilih Status Audit</option>                 
+                            <option value="On Progress">On Progress</option>
+                            <option value="Completed">Completed</option>                 
+                        </select>
+                    @error('status_audit')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>  
+                <div class="col-lg-6">
+                <label>Percentage</label>
+                <input  type="text" class="form-control"  name="percentage_audit"  required autocomplete="percentage_audit" placeholder="Jenis Audit" value="{{$audit->percentage_audit}}">
+                @error('percentage_audit')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+                </div> 
+            </div>
+            <div class="form-group row">
+                <div class="col-lg-6">
                 <label>Tipe Audit</label>
-                    <select name="tipe_audit"  class=" form-control form-control-user @error('tipe_audit') is-invalid @enderror" id="tipe_audit" value="{{$audit->tipe_audit}}" required>
+                    <select name="tipe_audit"  class=" form-control form-control-user @error('tipe_audit') is-invalid @enderror" id="tipe_audit" value="{{$audit->tipe_audit}} required>
                             <option value="" >Pilih Tipe Audit</option>                 
                             <option value="Internal">Internal</option>
                             <option value="External">External</option>                 
@@ -94,7 +117,7 @@
             <div class="form-group row">
                 <div class="col-lg-6">
                 <label>Department</label>
-                    <select name="department" class="form-control @error('deparment') is-invalid @enderror" required>
+                    <select name="department" class="form-control @error('deparment') is-invalid @enderror" value="{{$audit->department}} required>
                             @foreach ($department as $list_depart)
                             <option value="{{ $list_depart->id}}" >{{ $list_depart->nama_department}}</option>
                             @endforeach
@@ -118,7 +141,7 @@
             <div class="form-group row">
             <div class="col-lg-4">
                 <label>Tahun Audit</label>  
-                    <select name="tahun_audit"  class=" form-control form-control-user @error('tahun_audit') is-invalid @enderror" id="tahun_audit" value="{{ old('tahun_audit') }}" required>
+                    <select name="tahun_audit"  class=" form-control form-control-user @error('tahun_audit') is-invalid @enderror" id="tahun_audit" value="{{$audit->tahun_audit}} required>
                             <option value=""selected >Pilih Tahun Audit</option>                 
                             <option value="2019">2019</option>
                             <option value="2020">2020</option>      
@@ -152,7 +175,7 @@
             </div>
             <div class="form-group">
             <label>Dokumen Audit</label>
-                <input id="file" type="file" accept=".pdf,.jpg,.png" class="form-control"  name="file" autocomplete="file" placeholder="Dokumen"  required>
+                <input id="file" type="file" accept=".pdf,.jpg,.png" class="form-control"  name="file" autocomplete="file" placeholder="Dokumen" value="{{public_path('storage/LaporanAudit/'),$audit->file}}" required>
                 @error('file')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
