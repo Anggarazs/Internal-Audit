@@ -12,6 +12,6 @@ class Audit extends Model
 {
     protected $table = 'laporan_audit';
     protected $primaryKey = 'no_audit';
-    protected $fillable = ['no_audit','no_laporan_audit','tipe_audit','jenis_audit','objek','auditor','department','kriteria_audit','tahun_audit','tanggal_mulai_audit','tanggal_akhir_audit','jumlah_temuan','file'];
+    protected $fillable = ['no_audit','no_laporan_audit','judul_audit','status_audit','percentage_audit','tipe_audit','jenis_audit','objek','auditor','department','kriteria_audit','tahun_audit','tanggal_mulai_audit','tanggal_akhir_audit','jumlah_temuan','root_audit','corrective_action','file'];
 
 }
