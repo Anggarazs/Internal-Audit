@@ -20,8 +20,8 @@
 
 <title>Login</title>
 </head>
-<body>
-<div id="Web_1280__1">
+<body id="Web_1280__1">
+<div>
 	<div id="text">
 		<svg class="Rectangle_163">
 			<rect id="Rectangle_163" rx="0" ry="0" x="0" y="0" width="586" height="800">

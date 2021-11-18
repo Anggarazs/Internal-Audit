@@ -5,10 +5,9 @@
     border: none;
 }
 #Web_1280__1 {
-    position: absolute;
+    position: relative;
     width: 1368px;
     height: 660px;
-    background-color: rgba(240,240,247,1);
     overflow: hidden;
     --web-view-name: Web 1280 – 1;
     --web-view-id: Web_1280__1;
@@ -28,7 +27,7 @@
     text-align: center !important;
   }
 #Rectangle_163 {
-    fill: rgba(255,255,255,1);
+    fill: rgba(235,255,255,1);
 }
 .Rectangle_163 {
     filter: drop-shadow(0px 0px 20px rgba(0, 0, 0, 0.161));
@@ -237,18 +236,19 @@
     width: 1366px;
     height: 580px;
     left: 0px;
-    top: 220px;
+    top: 20px;
     overflow: visible;
 }
 #Group_4 {
-    position: absolute;
+    background-size: ;
+    position: relative;
     width: 1366px;
     height: 580px;
     left: 0px;
-    top: 0px;
+    top: 100px;
     overflow: visible;
 }
-#k1_b {
+#k1_b { 
     filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 1)) blur(0px);
     position: absolute;
     width: 444px;
@@ -396,25 +396,22 @@ a:hover{
 	background-position: right;
 }
 
+@media screen and (max-width : 768px) {
+    #k1_b {
+        filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 1)) blur(0px);
+        position: absolute;
+        width: 220px;
+        height: 183px;
+        left: 111px;
+        top: 100px;
+        overflow: visible;
+    }
 
-@media screen and (max-width: 1000px){
-	form{
-		width: 290px;
-	}
+    #Rectangle_163 {
+        width:300px;
+        height: 600;
+        top: 200px;
 
-	.login-content h2{
-        font-size: 2.4rem;
-        margin: 8px 0;
-	}
-
+    }
 }
 
-@media screen and (max-width: 900px){
-	.login-content{
-		justify-content: center;
-	}
-}
-
-#username {
-    fill: transparent !important;
-}
