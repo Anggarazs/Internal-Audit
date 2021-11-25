@@ -14,6 +14,7 @@ class Account extends Model
     'email',
     'id_department',
     'password',
+    'role'
 ];
 
 }
