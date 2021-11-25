@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-    <html lang="en">
+<html lang="en">
 
 <head>
 
@@ -11,7 +11,9 @@
 
     <!-- Custom fonts for this template-->
     <link href="{{asset('assets/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
     <script src="https://kit.fontawesome.com/fd8370ec87.js" crossorigin="anonymous"></script>
 
     <!-- Custom styles for this template-->
@@ -27,218 +29,251 @@
 
 </head>
 
-    <body id="page-top">
+<body id="page-top">
 
-        <!-- Page Wrapper -->
-        <div id="wrapper">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
 
-            <!-- Sidebar -->
-            <ul class="navbar-nav bg-gradient-danger sidebar sidebar-dark accordion" id="accordionSidebar">
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-danger sidebar sidebar-dark accordion" id="accordionSidebar">
 
-                <!-- Sidebar - Brand -->
-                <a class="sidebar-brand  bg-gradient-light d-flex align-items-center justify-content-center" href="/dashboard">
-                    <div>
+            <!-- Sidebar - Brand -->
+            @if(Auth::user()->role == 'auditor')
+            <a class="sidebar-brand  bg-gradient-light d-flex align-items-center justify-content-center"
+                href="/dashboard">
+            @endif
+            @if(Auth::user()->role == 'auditee')
+            <a class="sidebar-brand  bg-gradient-light d-flex align-items-center justify-content-center"
+                href="/finding">
+            @endif
+                <div>
                     <img src="{{asset('/assets/img/LogoKideco.png')}}" width="40" height="40"></img>
-                    </div>
-                    <!-- <div class="sidebar-brand-icon rotate-n-15">
+                </div>
+                <!-- <div class="sidebar-brand-icon rotate-n-15">
                         <i class="fas fa-globe"></i>
                     </div> -->
-                    <div class="sidebar-brand-text text-black mx-3">Audit Management</div>
-                </a>
+                <div class="sidebar-brand-text text-black mx-3">Audit Management</div>
+            </a>
 
-                <!-- Divider -->
-                <hr class="sidebar-divider my-0">
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
 
-                <!-- Nav Item - Dashboard -->
-                <li class="nav-item {{ Request::is('dashboard') ? 'active' : ''}}">
-                    <a class="nav-link " href="/dashboard">
-                        <i class="fas fa-fw fa-home"></i>
-                        <span>Dashboard</span></a>
-                </li>
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item {{ Request::is('dashboard') ? 'active' : ''}}">
+                @if(Auth::user()->role == 'auditor')
+                <a class="nav-link " href="/dashboard">
+                    <i class="fas fa-fw fa-home"></i>
+                    <span>Dashboard</span></a>
+            </li>
+                @endif
+            <!-- Divider -->
+            <hr class="sidebar-divider">
 
-                <!-- Divider -->
-                <hr class="sidebar-divider">
-
-                <!-- Heading
+            <!-- Heading
                 <div class="sidebar-heading">
                     Audit Management
                 </div> -->
 
-                <!-- Nav Item - Pages Collapse Menu -->
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-                        aria-expanded="true" aria-controls="collapseTwo">
-                        <i class="fas fa-fw fa-folder"></i>
-                        <span>Audit Management</span>
-                    </a>
-                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                        <div class="bg-white py-2 collapse-inner rounded">
-                            <!-- <h6 class="collapse-header">Custom Components:</h6> -->
-                            <a class="collapse-item {{ Request::is('audit') ? 'active' : ''}}" href="/audit">Audit Report</a>
-                            <a class="collapse-item {{ Request::is('finding') ? 'active' : ''}}" href="/finding">Finding</a>
-                        </div>
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+                    aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Audit Management</span>
+                </a>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <!-- <h6 class="collapse-header">Custom Components:</h6> -->
+                        @if(Auth::user()->role == 'auditor')
+                            <a class="collapse-item {{ Request::is('audit') ? 'active' : ''}}" href="/audit">Event Audit</a>
+                        @endif
+                        <a class="collapse-item {{ Request::is('finding') ? 'active' : ''}}" href="/finding">Item
+                            Audit</a>
                     </div>
-                </li>
-
-                <!-- Divider -->
-                <hr class="sidebar-divider">
-
-                <!-- Nav Item - Charts -->
-                <li class="nav-item {{ Request::is('account') ? 'active' : ''}}">
-                    <a class="nav-link" href="/account">
-                        <i class="fas fa-fw fa-wrench"></i>
-                        <span>Account Management</span></a>
-                </li>
-
-                <!-- Divider -->
-                <hr class="sidebar-divider d-none d-md-block">
-
-                <!-- Sidebar Toggler (Sidebar) -->
-                <div class="text-center d-none d-md-inline">
-                    <button class="rounded-circle border-0" id="sidebarToggle"></button>
                 </div>
-
-            </ul>
-            <!-- End of Sidebar -->
-
-            <!-- Content Wrapper -->
-            <div id="content-wrapper" class="d-flex flex-column">
+            </li>
+            @if(Auth::user()->role == 'auditor')
+            <!-- Divider -->
+            <hr class="sidebar-divider">
             
-                <!-- Main Content -->
-                <div id="content">
+            <!-- Nav Item - Charts -->
+           
+            <li class="nav-item {{ Request::is('account') ? 'active' : ''}}">
+                <a class="nav-link" href="/account">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>Account Management</span></a>
+            </li>
+            @endif
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
 
-                    <!-- Topbar -->
-                    <nav class="navbar navbar-expand navbar-light bg-gray-500 topbar mb-4 static-top shadow">
-
-                        <!-- Sidebar Toggle (Topbar) -->
-                        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                            <i class="fa fa-bars"></i>
-                        </button>
-
-                        <!-- Topbar Navbar -->
-                        <ul class="navbar-nav ml-auto">
-                            <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                            <li class="nav-item dropdown no-arrow d-sm-none">
-                                <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-search fa-fw"></i>
-                                </a>
-                                <!-- Dropdown - Messages -->
-                                <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                                    aria-labelledby="searchDropdown">
-                                    <form class="form-inline mr-auto w-100 navbar-search">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control bg-light border-0 small"
-                                                placeholder="Search for..." aria-label="Search"
-                                                aria-describedby="basic-addon2">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary" type="button">
-                                                    <i class="fas fa-search fa-sm"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </li>
-                            <!-- Nav Item - User Information -->
-                            <li class="nav-item dropdown no-arrow">
-                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="mr-2 d-none d-lg-inline text-black small ">{{ auth()->user()->username }}</span>
-                                    <img class="img-profile rounded-circle"
-                                        src="https://images.unsplash.com/photo-1562690868-60bbe7293e94?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cm9zZSUyMGZsb3dlcnxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80">
-                                </a>
-                                <!-- Dropdown - User Information -->
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                    aria-labelledby="userDropdown">
-                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Logout
-                                    </a>
-                                </div>
-                            </li>
-                        </ul>
-                    </nav>
-                    <!-- End of Topbar -->
-                    <!-- Begin Page Content -->
-                    <main class="py-2">
-                        @yield('content')
-                    </main>
-                    <!-- /.container-fluid -->
-                </div>
-                <!-- End of Main Content -->
-
-                <!-- Footer -->
-                <footer class="sticky-footer bg-white">
-                    <div class="container my-auto">
-                        <div class="copyright text-center my-auto">
-                            <span>Copyright &copy;2021</span>
-                        </div>
-                    </div>
-                </footer>
-                <!-- End of Footer -->
-
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
-            <!-- End of Content Wrapper -->
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-gradient-light topbar mb-4 static-top shadow">
+
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                        <li class="nav-item dropdown no-arrow d-sm-none">
+                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-search fa-fw"></i>
+                            </a>
+                            <!-- Dropdown - Messages -->
+                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                                aria-labelledby="searchDropdown">
+                                <form class="form-inline mr-auto w-100 navbar-search">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control bg-light border-0 small"
+                                            placeholder="Search for..." aria-label="Search"
+                                            aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="button">
+                                                <i class="fas fa-search fa-sm"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </li>
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-black medium ">{{ auth()->user()->username}}</span>
+                                <img class="img-profile rounded-circle" src="{{asset('/assets/img/profile.png')}}">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End of Topbar -->
+                <!-- Begin Page Content -->
+                <main class="py-2">
+                    @yield('content')
+                </main>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy;2021</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
 
         </div>
-        <!-- End of Page Wrapper -->
+        <!-- End of Content Wrapper -->
 
-        <!-- Scroll to Top Button-->
-        <a class="scroll-to-top rounded" href="#page-top">
-            <i class="fas fa-angle-up"></i>
-        </a>
+    </div>
+    <!-- End of Page Wrapper -->
 
-        <!-- Logout Modal-->
-        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Logout?</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">Klik tombol Logout untuk keluar dari website ini.</div>
-                    <form  action="/logout" method="post">
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Logout?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Klik tombol Logout untuk keluar dari website ini.</div>
+                <form action="/logout" method="post">
                     @csrf
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary" >Logout</button>
+                        <button type="submit" class="btn btn-primary">Logout</button>
                     </div>
-                    </form>
-                </div>
+                </form>
             </div>
         </div>
+    </div>
 
-        <!-- Bootstrap core JavaScript-->
-        <script type="text/javascript" src="{{asset('assets/vendor/jquery/jquery.min.js')}}"></script>
-        <script type="text/javascript" src="{{asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+    <!-- Bootstrap core JavaScript-->
+    <script type="text/javascript" src="{{asset('assets/vendor/jquery/jquery.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 
-        <!-- Core plugin JavaScript-->
-        <script type="text/javascript" src="{{asset('assets/vendor/jquery-easing/jquery.easing.min.js')}}"></script>
+    <!-- Core plugin JavaScript-->
+    <script type="text/javascript" src="{{asset('assets/vendor/jquery-easing/jquery.easing.min.js')}}"></script>
 
-        <!-- Custom scripts for all pages-->
-        <script type="text/javascript" src="{{asset('assets/js/sb-admin-2.min.js')}}"></script>
+    <!-- Custom scripts for all pages-->
+    <script type="text/javascript" src="{{asset('assets/js/sb-admin-2.min.js')}}"></script>
 
-        <!-- Page level plugins -->
-        <script type="text/javascript" src="{{asset('assets/vendor/chart.js/Chart.min.js')}}"></script>
+    <!-- Page level plugins -->
+    <script type="text/javascript" src="{{asset('assets/vendor/chart.js/Chart.min.js')}}"></script>
 
-        <!-- Page level custom scripts -->
-        <script type="text/javascript" src="{{asset('assets/js/demo/chart-area-demo.js')}}"></script>
-        <script type="text/javascript" src="{{asset('assets/js/demo/chart-pie-demo.js')}}"></script>
+    <!-- Page level custom scripts -->
+    <script type="text/javascript" src="{{asset('assets/js/demo/chart-area-demo.js')}}"></script>
+    <script type="text/javascript" src="{{asset('assets/js/demo/chart-pie-demo.js')}}"></script>
 
-        <!-- Page level plugins -->
-        <script type="text/javascript" src="{{asset('assets/vendor/datatables/jquery.dataTables.min.js')}}"></script>
-        <script type="text/javascript" src="{{asset('assets/vendor/datatables/dataTables.bootstrap4.min.js')}}"></script>
+    <!-- Page level plugins -->
+    <script type="text/javascript" src="{{asset('assets/vendor/datatables/jquery.dataTables.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('assets/vendor/datatables/dataTables.bootstrap4.min.js')}}"></script>
 
-        <!-- Page level custom scripts -->
-        <script type="text/javascript" src="{{asset('assets/js/demo/datatables-demo.js')}}"></script>
-        <script type="text/javascript" src="{{asset('assets/js/sweetalert2.min.js') }}"></script>
-        <script type="text/javascript" src="{{asset('assets/js/main.js') }}"></script>
+    <!-- Page level custom scripts -->
+    <script type="text/javascript" src="{{asset('assets/js/demo/datatables-demo.js')}}"></script>
+    <script type="text/javascript" src="{{asset('assets/js/sweetalert2.min.js') }}"></script>
+    <script type="text/javascript" src="{{asset('assets/js/main.js') }}"></script>
 
-        <!-- Selectpicker plugins -->
-        <script type="text/javascript" src="{{asset('select/js/bootstrap-select.min.js')}}"></script>
-    </body>
+    <!-- Selectpicker plugins -->
+    <script type="text/javascript" src="{{asset('select/js/bootstrap-select.min.js')}}"></script>
+
+
+</body>
+
+<script>
+    $(document).on('click','.btn-reject',function (event) {
+        let link = $(this).data('link');
+        $('#comment-modal').attr('action',link);
+        console.log(link);
+    });
+
+    $(document).on('click','.btn-approve',function (event) {
+        let link = $(this).data('link');
+        $('#riskafter-modal').attr('action',link);
+        console.log(link);
+    });
+
+    $(document).on('click','.btn-followup',function (event) {
+        let link = $(this).data('link');
+        $('#followup-modal').attr('action',link);
+    });
+</script>
+
 </html>
