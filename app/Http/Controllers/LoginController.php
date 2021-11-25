@@ -9,20 +9,30 @@ use Illuminate\Support\Facades\Auth;
 class LoginController extends Controller
 {
     public function index(){
-        return view('login');
+        return view('auths.login');
     }
 
     public function postLogin(Request $request){
         $credentials = $request->validate([
             "username" => 'required',
-            "password" => 'required'
+            "password" => 'required',
         ]);
         
         if(Auth::attempt($credentials)){
             $request->session()->regenerate();
-            return redirect()->intended('/dashboard');
+            if (Auth::user()->role == 'auditor') { // Role Auditor
+                return redirect()->intended('/dashboard');
+            } elseif ( Auth::user()->role == 'auditee') { // Role Auditee
+                return redirect()->intended('/finding');
+            } 
         }
-
+      
+        // if (Auth::check() && Auth::user()->role == 'auditor') { // Role Auditor
+        //     return view('/dahsboard');
+        // } elseif (Auth::check() && Auth::user()->role == 'auditee') { // Role Auditee
+        //     return view('/finding');
+        // } 
+ 
         return back()->with('LoginError','Gagal Login');
     }
 
