@@ -23,6 +23,7 @@ class AccountController extends Controller
         $validateData = $request->validate([
             "username" => 'required|max:255|unique:users',
             "id_department" => 'required',
+            "role" => 'required',
             "password" => 'required|min:6|max:255'
         ]);
         $validateData['password'] = bcrypt($validateData['password']);
@@ -41,10 +42,11 @@ class AccountController extends Controller
         $validateData = $request->validate([
             "username" => 'required|max:255',
             "id_department" => 'required',
+            "role" => 'required',
             "password" => 'required|min:6|max:255'
         ]);
         if ($validateData) {
-            $account = Account::where('id', $request['id'])->update(['username' => $request["username"], 'id_department' => $request["id_department"], 'password' => bcrypt($request["password"])]);
+            $account = Account::where('id', $request['id'])->update(['username' => $request["username"], 'id_department' => $request["id_department"],'role' => $request["role"], 'password' => bcrypt($request["password"])]);
 
             if ($account) {
                 session()->flash('berhasil', 'Akun Berhasil Diubah');
