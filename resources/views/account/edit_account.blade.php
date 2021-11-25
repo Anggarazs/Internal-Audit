@@ -36,6 +36,7 @@
             </div>
             <div class="form-group">
                 <select name="id_department"  class="form-control @error('id_department') is-invalid @enderror" id="id_department"  required>
+                        <option value="" selected>Pilih Deparment</option>      
                         @foreach ($department as $list_depart)
                         <option value="{{ $list_depart->id}}" >{{ $list_depart->nama_department}}</option>
                         @endforeach
@@ -46,6 +47,13 @@
                         </div>
                     @enderror 
                 </div>
+            <div class="form-group">
+                <select name="role"  class=" form-control  @error('role') is-invalid @enderror" id="role"   required>
+                    <option value="" selected>Pilih Role</option>                 
+                    <option value="auditor">Auditor</option>
+                    <option value="auditee">Auditee</option>           
+                </select>
+            </div>
             <div class="form-group">
                 <input id="password" type="password" class="form-control"  name="password"  required autocomplete="password" placeholder="Password">
                 @error('password')
