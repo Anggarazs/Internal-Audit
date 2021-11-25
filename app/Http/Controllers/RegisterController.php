@@ -21,6 +21,7 @@ class RegisterController extends Controller
        $validateData = $request->validate([
            "username" => 'required|max:255|unique:users',
            "id_department" => 'required',
+           "role"  => 'required',
            "password" => 'required|min:6|max:255'
        ]);
        $validateData['password'] = bcrypt($validateData['password']);
