@@ -28,7 +28,7 @@
             <div class="form-group row">
             <input type="hidden" name="no_audit" value="{{$audit->no_audit}}">
                 <div class="col-lg-6">
-                <label>Nomor Laporan Audit</label>
+                <label>Nomor Audit</label>
                     <input  type="text" class="form-control " name="no_laporan_audit" required autocomplete="no_laporan_audit" autofocus placeholder="Nomor Laporan Audit" value="{{$audit->no_laporan_audit}}">
                     @error('no_laporan_audit')
                         <span class="invalid-feedback" role="alert">
@@ -37,7 +37,7 @@
                     @enderror
                 </div>
                 <div class="col-lg-6">
-                <label>Judul Laporan Audit</label>
+                <label>Judul</label>
                 <input type="text" class="form-control"  name="judul_audit"  required autocomplete="judul_audit" placeholder="Judul Audit" value="{{$audit->judul_audit}}">
                 @error('judul_audit')
                     <span class="invalid-feedback" role="alert">
@@ -48,7 +48,7 @@
             </div>
             <div class="form-group row">
                 <div class="col-lg-6">
-                <label>Status Audit</label>
+                <label>Status</label>
                     <select name="status_audit"  class=" form-control form-control-user @error('status_audit') is-invalid @enderror" id="status_audit" value="{{$audit->status_audit}} required>
                             <option value="" selected  >Pilih Status Audit</option>                 
                             <option value="On Progress">On Progress</option>
@@ -129,7 +129,7 @@
                     @enderror
                 </div>
                 <div class="col-lg-6">
-                <label>Kriteria Audit</label>
+                <label>Kriteria</label>
                     <input  type="text" class="form-control"  name="kriteria_audit"  required autocomplete="kriteria_audit" placeholder="Kriteria Audit"  value="{{$audit->kriteria_audit}}">
                     @error('kriteria_audit')
                         <span class="invalid-feedback" role="alert">
@@ -140,7 +140,7 @@
             </div>
             <div class="form-group row">
             <div class="col-lg-4">
-                <label>Tahun Audit</label>  
+                <label>Tahun</label>  
                     <select name="tahun_audit"  class=" form-control form-control-user @error('tahun_audit') is-invalid @enderror" id="tahun_audit" value="{{$audit->tahun_audit}} required>
                             <option value=""selected >Pilih Tahun Audit</option>                 
                             <option value="2019">2019</option>
@@ -155,7 +155,7 @@
                         @enderror
                 </div>
                 <div class="col-lg-4"> 
-                <label>Tanggal Mulai Audit</label>
+                <label>Start</label>
                     <input  type="date" class="form-control" name="tanggal_mulai_audit"  required autocomplete="tanggal_mulai_audit" placeholder="Tanggal Mulai" value="{{$audit->tanggal_mulai_audit}}">
                     @error('tanggal_mulai_audit')
                         <span class="invalid-feedback" role="alert">
@@ -164,7 +164,7 @@
                     @enderror
                 </div>  
                 <div class="col-lg-4"> 
-                <label>Tanggal Akhir Audit</label>
+                <label>End</label>
                     <input type="date" class="form-control"  name="tanggal_akhir_audit"  required autocomplete="tanggal_akhir_audit" placeholder="Tanggal AKhir"  value="{{$audit->tanggal_akhir_audit}}">
                     @error('tanggal_akhir_audit')
                         <span class="invalid-feedback" role="alert">
@@ -175,7 +175,11 @@
             </div>
             <div class="form-group">
             <label>Dokumen Audit</label>
-                <input id="file" type="file" accept=".pdf,.jpg,.png" class="form-control"  name="file" autocomplete="file" placeholder="Dokumen" value="{{public_path('storage/LaporanAudit/'),$audit->file}}" required>
+                <div class="col-lg-4"> 
+                <span>File Lama :</span>
+                <a target="_blank" href="{{url('storage/LaporanAudit', $audit -> file)}}">{{ $audit -> file }}</a>
+                </div>
+                <input id="file" type="file" accept=".pdf,.jpg,.png" class="form-control"  name="file" autocomplete="file" placeholder="Dokumen" href="{{url('storage/LaporanAudit', $audit -> file)}}">
                 @error('file')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
