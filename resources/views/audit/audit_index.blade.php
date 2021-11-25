@@ -21,7 +21,7 @@
     <h6 class="m-0 font-weight-bold text-primary">Data Event Audit</h6>
 </div>
 <div class="card-body">
-        <a href="#" class="btn mb-3 btn-success btn-icon-split btn-sm" data-toggle="modal" data-target="#insertModal">
+        <a href="view_insert_audit" class="btn mb-3 btn-success btn-icon-split btn-sm" >
         <span class="icon text-white-50">
             <i class="fas fa-plus"></i>
         </span>
@@ -31,7 +31,6 @@
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
                 <tr class="text-center">
-                    <th>No.</th>
                     <th style="display:none">No Audit</th>
                     <th>No Audit</th>
                     <th>Judul</th>
@@ -55,15 +54,13 @@
                 </tr>
             </thead>
             <tbody>
-            @php
-                $i = 1;
-            @endphp
             @foreach($audit as $list_audit)
                 <tr class="text-center">
-                    <td>{{ $i++ }}
                     <td style="display:none">{{ $list_audit -> no_audit }}</td>
                     <td>{{ $list_audit -> no_laporan_audit }}</td>
-                    <td>{{ $list_audit -> judul_audit }}</td>
+                    <td>
+                        <a target="_blank"  href="view_detail_audit/{{$list_audit->no_audit}}" >{{ $list_audit -> judul_audit }}</a>
+                    </td>
                     <td>{{ $list_audit -> status_audit }}</td>
                     <td>{{ $list_audit -> percentage_audit }}</td>
                     <td>{{ $list_audit -> tipe_audit }}</td>
@@ -75,9 +72,9 @@
                     <td>{{ $list_audit -> tahun_audit }}</td>
                     <td>{{ $list_audit -> tanggal_mulai_audit }}</td>
                     <td>{{ $list_audit -> tanggal_akhir_audit  }}</td>
-                    <td>{{ $list_audit -> jumlah_temuan  }}</td>
-                    <td>{{ $list_audit -> root_audit  }}</td>
-                    <td>{{ $list_audit -> corrective_action  }}</td>
+                    <td>{{ $finding_total }}</td>
+                    <td>{{ $root_total }}</td>
+                    <td></td>
                     <td>
                     <a target="_blank" href="{{url('storage/LaporanAudit', $list_audit -> file)}}">{{ $list_audit -> file }}</a>
                     </td>
@@ -258,3 +255,4 @@
     </div>
 </div>
 @endsection
+
