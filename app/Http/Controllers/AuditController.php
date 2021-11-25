@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Audit;
 use App\Models\Department;
+use App\Models\Finding;
+use App\Models\JumlahTemuan;
+use App\Models\Root;
 use DB;
 
 class AuditController extends Controller
@@ -15,7 +18,26 @@ class AuditController extends Controller
         ->select('laporan_audit.*','department.nama_department')
         ->get();
         $department = Department::all();
-        return view('audit.audit_index',compact('audit','department'));
+        $finding_total = DB::table('jumlah_temuan')->count();       
+        $root_total=DB::table('root')->count();
+        $corrective_total=DB::table('corrective_action')->count();
+        return view('audit.audit_index',compact('audit','department','finding_total','root_total','corrective_total'));
+    }
+
+    public function view_insert_audit(){
+        $audit =DB::table('laporan_audit')
+        ->join('department','laporan_audit.department','=','department.id')
+        ->select('laporan_audit.*','department.nama_department')
+        ->get();
+        $department = Department::all();
+        return view('audit.insert_audit',compact('audit','department'));
+    }
+
+    public function view_detail_audit($id){
+        $audit = Audit::findOrFail($id);
+        $department = Department::all();
+        $finding = Finding::all();
+        return view('audit.detail_audit',compact('audit','department','finding'));
     }
 
     public function insert_audit(Request $request){
