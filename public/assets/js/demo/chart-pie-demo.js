@@ -9,7 +9,7 @@ var myPieChart = new Chart(ctx, {
   data: {
     labels: ["Closed", "On Progress"],
     datasets: [{
-      data: [20, 30],
+      data: [close, open],
       backgroundColor: ['#C7070F', '#808080'],
       hoverBackgroundColor: ['#910508', '#555555'],
       hoverBorderColor: "rgba(234, 236, 244, 1)",
