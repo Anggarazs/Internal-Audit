@@ -62,7 +62,7 @@
                         <a target="_blank"  href="view_detail_audit/{{$list_audit->no_audit}}" >{{ $list_audit -> judul_audit }}</a>
                     </td>
                     <td>{{ $list_audit -> status_audit }}</td>
-                    <td>{{ $list_audit -> percentage_audit }}</td>
+                    <td>{{ $list_audit -> percentage_audit }}%</td>
                     <td>{{ $list_audit -> tipe_audit }}</td>
                     <td>{{ $list_audit -> jenis_audit }} </td>
                     <td>{{ $list_audit -> objek}}</td>
@@ -72,9 +72,45 @@
                     <td>{{ $list_audit -> tahun_audit }}</td>
                     <td>{{ $list_audit -> tanggal_mulai_audit }}</td>
                     <td>{{ $list_audit -> tanggal_akhir_audit  }}</td>
-                    <td>{{ $finding_total }}</td>
-                    <td>{{ $root_total }}</td>
-                    <td></td>
+                    <td>
+                        @php
+                             $finding_total = \DB::table('finding')->where('no_audit',$list_audit->no_audit)->count();
+                        @endphp
+                        {{ $finding_total }}
+                    </td>
+                    <td>
+                        @php
+                            $root_total = 0;
+                             $jumlah_dari_root = \DB::table('jumlah_temuan')->where('id_audit',$list_audit->no_audit)->get();
+                            //  dd($jumlah_dari_root);
+                             foreach ($jumlah_dari_root as $key => $value) {
+                                $jumlah_dari_root_2 = \DB::table('root')->where('id_jumlah_temuan',$value->id_jumlah_temuan)->get();
+                                // dd($jumlah_dari_root_2);
+                                     foreach ($jumlah_dari_root_2 as $key => $value) {
+                                        $root_total += 1;
+                                    }
+                             }
+                        @endphp
+                        {{ $root_total }}
+                    </td>
+                    <td>
+                        @php
+                        $corrective_total = 0;
+                         $jumlah_dari_ca = \DB::table('jumlah_temuan')->where('id_audit',$list_audit->no_audit)->get();
+                        //  dd($jumlah_dari_root);
+                         foreach ($jumlah_dari_ca as $key => $value) {
+                            $jumlah_dari_ca_2 = \DB::table('root')->where('id_jumlah_temuan',$value->id_jumlah_temuan)->get();
+                            // dd($jumlah_dari_root_2);
+                                 foreach ($jumlah_dari_ca_2 as $key => $value) {
+                                    $jumlah_dari_ca_3 = \DB::table('corrective_action')->where('id_root',$value->id_root)->get();
+                                        foreach ($jumlah_dari_ca_3 as $key => $value) {
+                                            $corrective_total += 1;
+                                        }
+                                }
+                         }
+                    @endphp
+                    {{ $corrective_total }}
+                    </td>
                     <td>
                     <a target="_blank" href="{{url('storage/LaporanAudit', $list_audit -> file)}}">{{ $list_audit -> file }}</a>
                     </td>
@@ -255,4 +291,3 @@
     </div>
 </div>
 @endsection
-
