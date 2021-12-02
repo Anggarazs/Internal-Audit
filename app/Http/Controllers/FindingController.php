@@ -9,7 +9,10 @@ use App\Models\Finding;
 use App\Models\Root;
 use App\Models\JumlahTemuan;
 use App\Models\CA;
+use Auth;
+use App\Exports\FindingExport;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
 use DB;
 
 class FindingController extends Controller
@@ -24,8 +27,18 @@ class FindingController extends Controller
         $Depart = Department::all();
         $Root = Root::all();
         $CA = CA::all();
+        $depart_name = Department::where('id',Auth::user()->id_department)->first();
+        if (Auth::user()->role == "auditee") {
+            $finding = Finding::leftjoin('jumlah_temuan','jumlah_temuan.id_finding','finding.id_finding')
+            ->leftjoin('root','root.id_jumlah_temuan','jumlah_temuan.id_jumlah_temuan')
+            ->leftjoin('corrective_action','corrective_action.id_root','root.id_root')
+            ->select('finding.*','jumlah_temuan.item_finding','root.root_cause','corrective_action.*')
+            ->where('corrective_action.department',$depart_name->nama_department)
+            ->get();
+        }
         return view('finding.finding_index',compact('finding','Audit','Depart','Root','CA'));
     }
+
 
     public function data_tampil(Request $request){
         $laporan_audit = Audit::where('no_audit',$request->no_audit)->first();
@@ -57,14 +70,39 @@ class FindingController extends Controller
 
     public function approve_ca(Request $request, $id){
         $status_ca= CA::where('id_corrective',$id)->first();
+        $root_ca = Root::where('id_root',$status_ca->id_root)->first();
+        $jumlah_temuan_ca = JumlahTemuan::where('id_jumlah_temuan',$root_ca->id_jumlah_temuan)->first();
+        $id_audit = $jumlah_temuan_ca->id_audit;
+        $progress_audit= Audit::where('no_audit',$id_audit)->first();
+        $total_proses = JumlahTemuan::where('id_audit',$id_audit)->get();
+        $count = 0;
+        $sum_progress = 0;
+     
         $current = Carbon::now();
         $data = [
             'status' => 'Close',
             'risk_after' => $request['risk_after'],
+            'progress' => '100',
             'close_date' => $current
 
         ];
+        // dd($perhitungan_progress);
         $status_ca->update($data);
+        foreach ($total_proses as $key => $value) {
+            $root_total = Root::where('id_jumlah_temuan',$value->id_jumlah_temuan)->get();
+            foreach ($root_total as $key => $value) {
+                $corrective_action_total = CA::where('id_root',$value->id_root)->get();
+                    foreach ($corrective_action_total as $key => $value) {
+                        $count += 1;
+                        $sum_progress += $value->progress;
+                }
+            }
+        }
+        $perhitungan_progress = number_format($sum_progress/$count,2);
+        $data2 = [
+            'percentage_audit' => $perhitungan_progress
+        ];
+        $progress_audit->update($data2);
         session()->flash('berhasil', 'Finding Berhasil Disetujui');
         return redirect('/finding');
         // $status_ca=CA::where('id_corrective',$id)->first();
@@ -79,6 +117,8 @@ class FindingController extends Controller
         $cA = CA::where('id_corrective',$id);
         $data = [
             'comment' => $request['comment'],
+            'kondisi' => NULL,
+           
         ];
         $cA->update($data);
         session()->flash('berhasil', 'Comment Berhasil Ditambahkan');
@@ -93,6 +133,7 @@ class FindingController extends Controller
         $file_evident->move(public_path('storage/LaporanFollowUp'), $fileName_evident);
         $data = [
             'fu_corrective' => $request['fu_corrective'],
+            'kondisi' => 'follow-up',
             'file_fu' =>  $fileName_evident 
         ];
         $cA->update($data);
@@ -142,7 +183,6 @@ class FindingController extends Controller
         $finding_data=new Finding;
         $finding_data->no_laporan_audit=$laporan_audit->no_laporan_audit;
         $finding_data->judul_audit=$request->get('judul_audit');
-        $finding_data->progress='0%';
         $finding_data->tipe_audit=$request->get('tipe_audit');
         $finding_data->jenis_audit=$request->get('jenis_audit');
         $finding_data->kriteria_audit=$request->get('kriteria_audit');
@@ -230,9 +270,32 @@ class FindingController extends Controller
         $ca_data->due_date=$request->get('due_date');
         $ca_data->corrective=$request->get('ca');
         $ca_data->status='Open';
+        $ca_data->progress='0';
         $ca_data->save();
         session()->flash('berhasil', 'Corrective Action Berhasil Ditambahkan');
         return redirect('/finding');
+    }
+
+
+    public function edit_finding($id){
+
+        $jumlah_temuan = CA::where('id_corrective',$id)->first();
+        $department = Department::all();
+
+        return view('finding.edit_finding',compact('jumlah_temuan','department'));
+    }
+
+    public function edit_finding_process(Request $request){
+        $jumlah_temuan = CA::where('id_corrective', $request['id_corrective']);
+        
+        $data = [
+            'progress' => $request['progress'],
+            
+        ];
+        $jumlah_temuan->update($data);
+        session()->flash('berhasil', 'Item Audit Berhasil Diubah');
+        return redirect('/finding');
+
     }
 
     public function delete_finding($id){
