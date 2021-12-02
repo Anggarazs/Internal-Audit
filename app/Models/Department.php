@@ -11,9 +11,6 @@ class Department extends Model
     protected $table = 'department';
     protected $primaryKey = 'id';
     protected $fillable = ['id','nama_department'];
-
-
-  
-
     
+ 
 }
