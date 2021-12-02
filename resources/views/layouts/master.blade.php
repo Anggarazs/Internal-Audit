@@ -261,19 +261,19 @@
     $(document).on('click','.btn-reject',function (event) {
         let link = $(this).data('link');
         $('#comment-modal').attr('action',link);
-        console.log(link);
     });
 
     $(document).on('click','.btn-approve',function (event) {
         let link = $(this).data('link');
         $('#riskafter-modal').attr('action',link);
-        console.log(link);
     });
 
     $(document).on('click','.btn-followup',function (event) {
         let link = $(this).data('link');
         $('#followup-modal').attr('action',link);
     });
+
+    
 </script>
 
 </html>
