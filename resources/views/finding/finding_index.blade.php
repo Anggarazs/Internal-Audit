@@ -73,7 +73,9 @@
                             @if(Auth::user()->role == 'auditor')
                             <th>Approval</th>
                             @endif
+                            @if(Auth::user()->role == 'auditee')
                             <th>Follow Up</th>
+                            @endif
                             @if(Auth::user()->role == 'auditor')
                             <th>Action</th>
                             @endif
@@ -96,7 +98,7 @@
                                 @if ($item -> risk_level == 'High' )
                                 <p class="text-danger"> {{ $item -> risk_level }}</p>
                                 @endif
-                                
+
                             </td>
                             <td>{{ $item -> department }}</td>
                             <td>{{ $item -> due_date }}</td>
@@ -116,9 +118,9 @@
                                 @if ($item -> risk_after == 'High' )
                                 <p class="text-danger"> {{ $item -> risk_after }}</p>
                                 @endif
-                               
+
                             </td>
-                            <td>{{ $item -> progress }}</td>
+                            <td>{{ $item -> progress }}%</td>
                             <td>{{ $item -> close_date }}</td>
                             <td>
                                 @if ($item -> status == 'Open' )
@@ -129,6 +131,7 @@
                             </td>
                             @if(Auth::user()->role == 'auditor')
                             <td class="text-center">
+                                @if($item->status == 'Open' && $item->kondisi != NUll)
                                 <a data-link="/approve_ca/{{ $item->id_corrective }}"
                                     class="btn btn-approve btn-success btn-icon-split btn-sm" data-toggle="modal"
                                     data-target="#Approve">
@@ -137,7 +140,7 @@
                                     </span>
                                     <span class="text">Approve</span>
                                 </a>
-                                <a data-link="/reject_ca_process/{{ $item->id_corrective }}" onClick='if(this.disabled){ return false; } else { this.disabled = true; }'
+                                <a data-link="/reject_ca_process/{{ $item->id_corrective }}"
                                     class="btn btn-reject btn-danger btn-icon-split btn-sm mt-3" data-toggle="modal"
                                     data-target="#Reject">
                                     <span class="icon text-white-50">
@@ -145,10 +148,14 @@
                                     </span>
                                     <span class="text">Reject</span>
                                 </a>
+                                @endif
                             </td>
                             @endif
+                            @if(Auth::user()->role == 'auditee')
                             <td class="text-center">
-                                <a data-link="/follow_up_ca/{{ $item->id_corrective }}" 
+                                @if($item->status == 'Open' && $item->kondisi == NUll)
+
+                                <a data-link="/follow_up_ca/{{ $item->id_corrective }}"
                                     class="btn btn-followup btn-warning btn-icon-split btn-sm " data-toggle="modal"
                                     data-target="#follow_up" id="button_fu">
                                     <span class="icon vertical-align: middle text-white-50">
@@ -156,10 +163,13 @@
                                     </span>
                                     <span class="text">Follow Up</span>
                                 </a>
+
+                                @endif
                             </td>
+                            @endif
                             @if(Auth::user()->role == 'auditor')
                             <td class="text-center">
-                                <a href="edit_finding/{{$item->id_finding}}" class="btn btn-info btn-icon-split btn-sm"
+                                <a href="edit_finding/{{$item->id_corrective}}" class="btn btn-info btn-icon-split btn-sm"
                                     type="submit">
                                     <span class="icon text-white-50">
                                         <i class="fas  fa-edit"></i>
@@ -181,6 +191,13 @@
                     </thead>
                 </table>
             </div>
+            <br>
+            {{-- <a href="/finding/export_excel" class="btn mb-3 btn-success btn-icon-split btn-sm">
+                <span class="icon text-white-50">
+                    <i class="far fa-file-excel"></i>
+                </span>
+                <span class="text">Export Excel</span>
+            </a> --}}
         </div>
     </div>
 
@@ -613,7 +630,7 @@
                         <div class="form-group row">
                             <div class="col-lg-12">
                                 <label>Evident</label>
-                                <input class="form-control form-control-user" type="file" name="file_fu"
+                                <input required class="form-control form-control-user" type="file" name="file_fu"
                                     accept=".pdf,.jpg,.jpeg,.png" />
                             </div>
                         </div>
@@ -718,5 +735,8 @@
         }
      });
     }
+
+   
+    
     </script>
     @endsection
