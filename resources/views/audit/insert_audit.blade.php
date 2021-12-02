@@ -22,7 +22,10 @@
         <!-- Card Content - Collapse -->
         <div class="collapse show" id="collapseCardExample">
             <div class="card-body">
+                <form method="POST" action="/insert_audit" enctype="multipart/form-data">
+                    @csrf
                 <div class="form-group row">
+                   
                     <div class="col-sm-6">
                         <input id="no_laporan_audit" type="text" class="form-control form-control-user"  name="no_laporan_audit" value="{{ old('no_laporan_audit') }}" required autocomplete="no_laporan_audit" placeholder="Nomor Laporan Audit">
                         @error('no_laporan_audit')
