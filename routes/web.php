@@ -20,7 +20,7 @@ use App\Http\Controllers\AccountController;
 */
 
 Route::get('/', function () {
-    return view('login');
+    return view('auths.login');
 });
 
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
@@ -73,6 +73,7 @@ Route::middleware(['auth'])->group(function () {
      // Item Audit
      Route::get('/finding', [FindingController::class, 'index_finding']);
      Route::post('/follow_up_ca/{id}', [FindingController::class, 'follow_up_ca']);
+     
     
 });
 
