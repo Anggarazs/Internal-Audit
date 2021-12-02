@@ -10,5 +10,5 @@ class CA extends Model
     use HasFactory;
     protected $table = 'corrective_action';
     protected $primaryKey = 'id_corrective';
-    protected $fillable = ['id_corrective','corrective','status','department','risk_level','risk_after','due_date','close_date','comment'];
+    protected $fillable = ['id_corrective','corrective','status','department','risk_level','risk_after','due_date','close_date','comment','progress'];
 }
