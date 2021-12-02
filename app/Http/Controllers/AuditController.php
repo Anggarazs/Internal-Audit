@@ -18,10 +18,10 @@ class AuditController extends Controller
         ->select('laporan_audit.*','department.nama_department')
         ->get();
         $department = Department::all();
-        $finding_total = DB::table('jumlah_temuan')->count();       
-        $root_total=DB::table('root')->count();
-        $corrective_total=DB::table('corrective_action')->count();
-        return view('audit.audit_index',compact('audit','department','finding_total','root_total','corrective_total'));
+        // // $finding_total = DB::table('jumlah_temuan')->count();
+        // // $root_total=DB::table('root')->count();
+        // $corrective_total=DB::table('corrective_action')->count();
+        return view('audit.audit_index',compact('audit','department'));
     }
 
     public function view_insert_audit(){
@@ -36,7 +36,12 @@ class AuditController extends Controller
     public function view_detail_audit($id){
         $audit = Audit::findOrFail($id);
         $department = Department::all();
-        $finding = Finding::all();
+        $finding = Finding::leftjoin('jumlah_temuan','jumlah_temuan.id_finding','finding.id_finding')
+        ->leftjoin('root','root.id_jumlah_temuan','jumlah_temuan.id_jumlah_temuan')
+        ->leftjoin('corrective_action','corrective_action.id_root','root.id_root')
+        ->select('finding.*','jumlah_temuan.item_finding','root.root_cause','corrective_action.*')
+        ->where('finding.no_audit',$id)
+        ->get();
         return view('audit.detail_audit',compact('audit','department','finding'));
     }
 
