@@ -185,14 +185,72 @@
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
-                                <th>Nomor Audit</th>
-                                <th>B</th>
+                                <th>No Laporan Audit</th>
+                                <th>Judul Laporan</th>
+                                <th>Finding</th>
+                                <th>Root Cause</th>
+                                <th>Corrective Action</th>
+                                <th>Risk Level</th>
+                                <th>Auditee</th>
+                                <th>Due Date</th>
+                                <th bgcolor="#F0F3FD">FU Corrective Action</th>
+                                <th bgcolor="#F0F3FD">Evident</th>
+                                <th>Comment</th>
+                                <th>Risk After</th>
+                                <th>Percentage</th>
+                                <th>Close Date</th>
+                                <th>Status</th>
                             </tr>
                         <tbody>
                             @foreach($finding as $item)
-                            <tr>
-                                <td>{{ $item->no_laporan_audit }}</td>
-                                <td>2</td>
+                            <tr class="text-center">
+                                <td>{{ $item -> no_laporan_audit }}</td>
+                                <td>{{ $item -> judul_audit}}</td>
+                                <td>{{ $item -> item_finding}}</td>
+                                <td>{{ $item -> root_cause}} </td>
+                                <td>{{ $item -> corrective }}</td>
+                                <td>
+                                    @if ($item -> risk_level == 'Low' )
+                                    <p class="text-success">{{ $item -> risk_level }}</p>
+                                    @endif
+                                    @if ($item -> risk_level == 'Medium' )
+                                    <p class="text-warning"> {{ $item -> risk_level }}</p>
+                                    @endif
+                                    @if ($item -> risk_level == 'High' )
+                                    <p class="text-danger"> {{ $item -> risk_level }}</p>
+                                    @endif
+
+                                </td>
+                                <td>{{ $item -> department }}</td>
+                                <td>{{ $item -> due_date }}</td>
+                                <td bgcolor="#F0F3FD">{{ $item -> fu_corrective }}</td>
+                                <td bgcolor="#F0F3FD">
+                                    <a target="_blank" href="{{url('storage/LaporanFollowUp', $item -> file_fu)}}">{{
+                                        $item
+                                        -> file_fu }}</a>
+                                </td>
+                                <td>{{ $item -> comment }}</td>
+                                <td>
+                                    @if ($item -> risk_after == 'Low' )
+                                    <p class="text-success">{{ $item -> risk_after }}</p>
+                                    @endif
+                                    @if ($item -> risk_after == 'Medium' )
+                                    <p class="text-warning"> {{ $item -> risk_after }}</p>
+                                    @endif
+                                    @if ($item -> risk_after == 'High' )
+                                    <p class="text-danger"> {{ $item -> risk_after }}</p>
+                                    @endif
+
+                                </td>
+                                <td>{{ $item -> progress }}%</td>
+                                <td>{{ $item -> close_date }}</td>
+                                <td>
+                                    @if ($item -> status == 'Open' )
+                                    <p class="text-warning"> {{ $item -> status }}</p>
+                                    @else
+                                    <p class="text-success"> {{ $item -> status }}</p>
+                                    @endif
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
